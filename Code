@@ -1,0 +1,70 @@
+use sakila;
+--1a
+SELECT * FROM actor;
+--1b
+SELECT UPPER(CONCAT(first_name, ' ', last_name)) AS 'Actor Name'
+  FROM actor;
+--2a
+  SELECT first_name, last_name, actor_id
+  FROM actor
+  WHERE first_name = "Joe";
+  
+--2b
+SELECT * FROM actor
+WHERE last_name LIKE '%GEN%';
+
+--2c
+SELECT last_name, first_name FROM actor
+WHERE last_name LIKE '%LI%'ORDER BY last_name, first_name;
+
+--2d
+SELECT country_id, country FROM country
+WHERE country IN ('Afghanistan', 'Bangladesh', 'China');
+
+--3a
+ALTER TABLE actor
+ADD COLUMN description BLOB;
+
+
+--4a
+SELECT last_name, COUNT(*) AS 'count'FROM actor
+GROUP BY last_name;
+
+--4b
+SELECT last_name, COUNT(*) AS 'count' FROM actor 
+GROUP BY last_name HAVING COUNT(*) > 1;
+
+UPDATE actor
+SET first_name ='HARPO'
+WHERE (first_name ='GROUCHO' AND last_name = 'WILLIAMS');
+
+--4d-
+UPDATE actor;
+SET first_name = CASE WHEN first_name = 'HARPO'
+THEN 'GROUCHO' ELSE 'MUCHO GROUCHO'
+END
+WHERE actor_id = 172;
+
+--5a
+
+
+--6a
+USE sakila;
+SELECT s.first_name, s.last_name, a.address
+FROM staff s
+INNER JOIN address a
+ON (s.address_id = a.address_id);
+
+--6b
+
+USE sakila;
+SELECT s.first_name, s.last_name, SUM(p.amount) FROM staff s
+INNER JOIN payment p 
+ON (s.staff_id = p.staff_id)
+WHERE MONTH(p.payment_date) = 08 AND YEAR(p.payment_date) = 2005
+GROUP BY s.staff_id;
+
+--6c
+select count(film_actor.actor_id), film.title from film
+inner join film_actor using (film_id)
+group by film.title;
